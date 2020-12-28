@@ -12,9 +12,7 @@ function Single() {
 
   useEffect(() => {
     const getWPPost = async () => {
-      const res = await fetch(
-        "http://headless.local/wp-json/wp/v2/posts/" + id
-      );
+      const res = await fetch(window.env.APIURL + "/posts/" + id);
       const json = await res.json();
 
       console.log(json);
