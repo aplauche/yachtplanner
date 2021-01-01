@@ -24,6 +24,7 @@ const FilterDiv = styled("div")`
 
   & h2 {
     color: white;
+    align-self: center;
   }
 
   & p {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import DestinationCard from "../Components/DestinationCard";
+import Map from "../Components/Map";
 import Header from "../Components/Header";
 import styled from "@emotion/styled";
 import Filters from "../Components/Filters";
@@ -75,7 +76,7 @@ function Home() {
       />
 
       <GridLayout>
-        <div className="map"></div>
+        <Map />
         <div className="destination-grid">
           {posts?.map((post) => {
             // Tides filter
