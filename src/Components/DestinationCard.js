@@ -24,13 +24,13 @@ const CardDiv = styled(Link)`
 
 function DestinationCard({ post }) {
   return (
-    <CardDiv key={post.id} to={`/${post.id}`}>
-      <img src={post.acf.featured_image.url} alt="" />
+    <CardDiv key={post?.id} to={`/${post?.id}`}>
+      <img src={post?.acf.featured_image.url} alt="" />
       <div className="content">
-        <h3>{post.title.rendered}</h3>
+        <h3>{post?.title.rendered}</h3>
         <p>
           <strong>TIDES: </strong>
-          {post.acf.tides}
+          {post?.acf.tides}
         </p>
       </div>
     </CardDiv>

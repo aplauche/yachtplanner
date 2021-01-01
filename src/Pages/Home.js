@@ -25,6 +25,7 @@ const GridLayout = styled("div")`
 
 function Home() {
   const [posts, setPosts] = useState([]);
+  const [filteredPosts, setFilteredPosts] = useState([]);
 
   const [weather, setWeather] = useState([
     { name: "sunny", value: "sunny", isChecked: false },
@@ -45,6 +46,38 @@ function Home() {
     };
     getWPPosts();
   }, []);
+
+  useEffect(() => {
+    let filtered = posts?.filter((post) => {
+      // Tides filter
+      if (
+        tides != "any" &&
+        post.acf.tides != "any" &&
+        post.acf.tides != tides
+      ) {
+        return false;
+      }
+
+      // Weather Filter
+      if (
+        weather.filter((checkbox) => (checkbox.isChecked ? true : false))
+          .length > 0 &&
+        !post.acf.weather.some((item) => {
+          var temp = weather.map((checkbox) => {
+            return checkbox.isChecked ? checkbox.value : false;
+          });
+          return temp.includes(item) ? true : false;
+        })
+      ) {
+        return false;
+      }
+
+      // Activity Filter
+
+      return true;
+    });
+    setFilteredPosts([...filtered]);
+  }, [tides, weather, posts]);
 
   const handleTideChange = (value) => {
     setTides(value);
@@ -72,9 +105,10 @@ function Home() {
       />
 
       <GridLayout>
-        <Map posts={posts} />
+        <Map posts={filteredPosts} />
         <div className="destination-grid">
-          {posts?.map((post) => {
+          {/* LEGACY INLINE FILTERING */}
+          {/* {posts?.map((post) => {
             // Tides filter
             if (tides != "any" && post.acf.tides != tides) {
               return null;
@@ -96,6 +130,10 @@ function Home() {
 
             // Activity Filter
 
+            return <DestinationCard post={post} />;
+          })} */}
+
+          {filteredPosts.map((post) => {
             return <DestinationCard post={post} />;
           })}
         </div>
