@@ -2,10 +2,29 @@ import React, { useEffect } from "react";
 import styled from "@emotion/styled";
 
 const FilterDiv = styled("div")`
-  background: white;
-  border-radius: 12px;
-  min-height: 600px;
-  padding: 20px;
+  padding: 32px 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 8px;
+  z-index: 2;
+  position: relative;
+  background-image: url("/images/beach.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-attachment: fixed;
+
+  & .group {
+    width: 100%;
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  & h2 {
+    color: white;
+  }
 
   & p {
     margin-bottom: 4px;
@@ -33,29 +52,34 @@ function Filters({ setTides, setWeather, weather }) {
   return (
     <FilterDiv>
       <h2>Filter Destinations</h2>
-      <p>
-        <label htmlFor="tides">Tides:</label>
-      </p>
-      <select name="tides" id="tides" onChange={handleTideChange}>
-        <option value="any">Any</option>
-        <option value="low">Low</option>
-        <option value="high">High</option>
-      </select>
+      <div className="group">
+        <p>
+          <label htmlFor="tides">Tides:</label>
+        </p>
+        <select name="tides" id="tides" onChange={handleTideChange}>
+          <option value="any">Any</option>
+          <option value="low">Low</option>
+          <option value="high">High</option>
+        </select>
+      </div>
 
-      {weather.map((item) => {
-        return (
-          <label key={item.name}>
-            <input
-              id={item.name}
-              name={item.value}
-              type="checkbox"
-              checked={item.isChecked}
-              onChange={handleWeatherChange}
-            />
-            {item.value}
-          </label>
-        );
-      })}
+      <div className="group">
+        <p>Weather Conditions:</p>
+        {weather.map((item) => {
+          return (
+            <label key={item.name}>
+              <input
+                id={item.name}
+                name={item.value}
+                type="checkbox"
+                checked={item.isChecked}
+                onChange={handleWeatherChange}
+              />
+              {item.value}
+            </label>
+          );
+        })}
+      </div>
     </FilterDiv>
   );
 }

@@ -9,6 +9,7 @@ const CardDiv = styled(Link)`
   display: block;
   height: auto;
   text-decoration: none;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 8px;
 
   & img {
     width: 100%;

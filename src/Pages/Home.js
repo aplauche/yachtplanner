@@ -7,18 +7,14 @@ import Filters from "../Components/Filters";
 
 const GridLayout = styled("div")`
   display: grid;
-  grid-template-columns: 250px 1fr;
+  grid-template-columns: 1fr 2fr;
   gap: 50px;
-  background: #6889b4;
-  padding: 50px 6%;
-
-  & .sidebar {
-    background: white;
-    border-radius: 12px;
-    min-height: 600px;
-  }
+  // background: #6889b4;
+  background: white;
+  padding: 0px;
 
   & .destination-grid {
+    padding: 50px 20px;
     align-items: start;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -72,12 +68,14 @@ function Home() {
     <div className="Home">
       <Header />
 
+      <Filters
+        setTides={handleTideChange}
+        weather={weather}
+        setWeather={handleWeatherChange}
+      />
+
       <GridLayout>
-        <Filters
-          setTides={handleTideChange}
-          weather={weather}
-          setWeather={handleWeatherChange}
-        />
+        <div className="map"></div>
         <div className="destination-grid">
           {posts?.map((post) => {
             // Tides filter

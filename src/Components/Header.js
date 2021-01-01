@@ -4,9 +4,10 @@ import styled from "@emotion/styled";
 const HeaderDiv = styled("div")`
   width: 100%;
   height: 75px;
-  background: #22446b;
+  background: white;
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 8px;
 
-  color: white;
+  color: #22446b;
 
   & .container {
     display: flex;
