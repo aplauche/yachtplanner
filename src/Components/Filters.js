@@ -25,9 +25,10 @@ const FilterDiv = styled("div")`
   & h2 {
     color: white;
     align-self: center;
+    text-align: center;
   }
 
-  & p {
+  & h5 {
     margin-bottom: 4px;
     display: block;
   }
@@ -54,9 +55,9 @@ function Filters({ setTides, setWeather, weather }) {
     <FilterDiv>
       <h2>Filter Destinations</h2>
       <div className="group">
-        <p>
+        <h5>
           <label htmlFor="tides">Tides:</label>
-        </p>
+        </h5>
         <select name="tides" id="tides" onChange={handleTideChange}>
           <option value="any">Any</option>
           <option value="low">Low</option>
@@ -65,7 +66,7 @@ function Filters({ setTides, setWeather, weather }) {
       </div>
 
       <div className="group">
-        <p>Weather Conditions:</p>
+        <h5>Weather Conditions:</h5>
         {weather.map((item) => {
           return (
             <label key={item.name}>

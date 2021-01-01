@@ -25,10 +25,6 @@ const GridLayout = styled("div")`
 
 function Home() {
   const [posts, setPosts] = useState([]);
-  const [filter, setFilter] = useState({
-    weather: ["rain"],
-    tides: "any",
-  });
 
   const [weather, setWeather] = useState([
     { name: "sunny", value: "sunny", isChecked: false },
@@ -76,7 +72,7 @@ function Home() {
       />
 
       <GridLayout>
-        <Map />
+        <Map posts={posts} />
         <div className="destination-grid">
           {posts?.map((post) => {
             // Tides filter
