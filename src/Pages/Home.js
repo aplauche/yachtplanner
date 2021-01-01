@@ -80,11 +80,15 @@ function Home() {
         />
         <div className="destination-grid">
           {posts?.map((post) => {
+            // Tides filter
             if (tides != "any" && post.acf.tides != tides) {
               return null;
             }
 
+            // Weather Filter
             if (
+              weather.filter((checkbox) => (checkbox.isChecked ? true : false))
+                .length > 0 &&
               !post.acf.weather.some((item) => {
                 var temp = weather.map((checkbox) => {
                   return checkbox.isChecked ? checkbox.value : false;
@@ -94,6 +98,8 @@ function Home() {
             ) {
               return null;
             }
+
+            // Activity Filter
 
             return <DestinationCard post={post} />;
           })}
