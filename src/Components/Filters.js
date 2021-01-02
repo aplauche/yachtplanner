@@ -43,12 +43,15 @@ const FilterDiv = styled("div")`
   }
 `;
 
-function Filters({ setTides, setWeather, weather }) {
+function Filters({ setTides, setWeather, weather, setActivity, activity }) {
   const handleTideChange = (e) => {
     setTides(e.target.value);
   };
   const handleWeatherChange = (e) => {
-    setWeather(e.target.name, e.target.checked);
+    setWeather(e.target.value);
+  };
+  const handleActivityChange = (e) => {
+    setActivity(e.target.name, e.target.checked);
   };
 
   return (
@@ -59,25 +62,36 @@ function Filters({ setTides, setWeather, weather }) {
           <label htmlFor="tides">Tides:</label>
         </h5>
         <select name="tides" id="tides" onChange={handleTideChange}>
-          <option value="any">Any</option>
+          <option value="any">Any Tides</option>
           <option value="low">Low</option>
           <option value="high">High</option>
+        </select>
+
+        <h5>
+          <label htmlFor="tides">Weather Conditions:</label>
+        </h5>
+        <select name="tides" id="tides" onChange={handleWeatherChange}>
+          <option value="any">Any Weather</option>
+          <option value="sunny">Sunny</option>
+          <option value="overcast">Overcast</option>
+          <option value="rain">Rainy</option>
+          <option value="windy">Windy</option>
         </select>
       </div>
 
       <div className="group">
-        <h5>Weather Conditions:</h5>
-        {weather.map((item) => {
+        <h5>Activities:</h5>
+        {activity.map((item) => {
           return (
-            <label key={item.name}>
+            <label key={item.value}>
               <input
-                id={item.name}
+                id={item.value}
                 name={item.value}
                 type="checkbox"
                 checked={item.isChecked}
-                onChange={handleWeatherChange}
+                onChange={handleActivityChange}
               />
-              {item.value}
+              {item.name}
             </label>
           );
         })}

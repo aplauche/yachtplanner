@@ -6,14 +6,7 @@ import Single from "./Pages/Single";
 function App() {
   return (
     <BrowserRouter>
-      <Switch>
-        <Route path="/" exact={true}>
-          <Home />
-        </Route>
-        <Route path="/:id" exact={true}>
-          <Single />
-        </Route>
-      </Switch>
+      <Home />
     </BrowserRouter>
   );
 }

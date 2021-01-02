@@ -10,6 +10,7 @@ body {
     "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: #22446b;
 }
 
 code {
@@ -39,7 +40,7 @@ select {
   -moz-padding-end: 20px;
   -webkit-padding-start: 8px;
   -moz-padding-start: 8px;
-  background-color: #b5cde1; /* Fallback color if gradients are not supported */
+  background-color: #e0effa; /* Fallback color if gradients are not supported */
   background-position: center right;
   background-repeat: no-repeat;
   border: none;

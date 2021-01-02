@@ -3,11 +3,15 @@ import styled from "@emotion/styled";
 
 const HeaderDiv = styled("div")`
   width: 100%;
-  height: 75px;
   background: white;
   box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 8px;
 
   color: #22446b;
+
+  & img {
+    height: 50px;
+    margin: 16px;
+  }
 
   & .container {
     display: flex;
@@ -23,7 +27,7 @@ function Header() {
   return (
     <HeaderDiv>
       <div className="container">
-        <h1>YACHT PLANNER</h1>
+        <img src="/images/yacht-logo.svg" alt="" />
       </div>
     </HeaderDiv>
   );
