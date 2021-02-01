@@ -7,6 +7,7 @@ import styled from "@emotion/styled";
 import Filters from "../Components/Filters";
 import { Switch, Route, BrowserRouter, useParams } from "react-router-dom";
 import Single from "./Single";
+import { activityStore, tidesStore, weatherStore } from "../store";
 
 const GridLayout = styled("div")`
   display: grid;
@@ -30,117 +31,58 @@ const GridLayout = styled("div")`
 
 function Home() {
   const [posts, setPosts] = useState([]);
-  const [filteredPosts, setFilteredPosts] = useState([]);
+
   const { id } = useParams();
 
-  // const [weather, setWeather] = useState([
-  //   { name: "sunny", value: "sunny", isChecked: false },
-  //   { name: "windy", value: "windy", isChecked: false },
-  //   { name: "rain", value: "rain", isChecked: false },
-  //   { name: "overcast", value: "overcast", isChecked: false },
-  // ]);
+  const [activity, setActivity] = useState(activityStore.getState());
 
-  const [activity, setActivity] = useState([
-    { name: "Water Sports", value: "water_sports", isChecked: false },
-    { name: "Scuba", value: "scuba", isChecked: false },
-    { name: "Hiking", value: "hiking", isChecked: false },
-    { name: "Historic Sites", value: "historic", isChecked: false },
-    { name: "Dining", value: "dining", isChecked: false },
-    { name: "Relaxation", value: "relax", isChecked: false },
-  ]);
-
-  const [tides, setTides] = useState("any");
-  const [weather, setWeather] = useState("any");
+  const [tides, setTides] = useState(tidesStore.getState());
+  const [weather, setWeather] = useState(weatherStore.getState());
 
   useEffect(() => {
     const getWPPosts = async () => {
-      const res = await fetch(window.env.APIURL + "/destination");
+      const res = await fetch(
+        window.env.APIURL +
+          "/destination?activity=" +
+          activity +
+          "&weather=" +
+          weather +
+          "&tide=" +
+          tides
+      );
       const json = await res.json();
 
-      console.log(json);
+      console.log(weather);
 
       setPosts(json);
     };
     getWPPosts();
-  }, []);
 
-  useEffect(() => {
-    let filtered = posts?.filter((post) => {
-      // Tides filter
-      if (
-        tides != "any" &&
-        post.acf.tides != "any" &&
-        post.acf.tides != tides
-      ) {
-        return false;
-      }
+    activityStore.subscribe(() => setActivity(activityStore.getState()));
+    tidesStore.subscribe(() => setTides(tidesStore.getState()));
+    weatherStore.subscribe(() => setWeather(weatherStore.getState()));
+  }, [activity, weather, tides]);
 
-      // Weather Filter
-      if (
-        weather != "any" &&
-        !post.acf.weather.some((item) => {
-          return item == weather;
-        })
-      ) {
-        return false;
-      }
+  // const handleTideChange = (value) => {
+  //   setTides(value);
+  // };
 
-      // Activity Filter
-      if (
-        activity.filter((checkbox) => (checkbox.isChecked ? true : false))
-          .length > 0 &&
-        !post.acf.activity.some((item) => {
-          var temp = activity.map((checkbox) => {
-            return checkbox.isChecked ? checkbox.value : false;
-          });
-          return temp.includes(item) ? true : false;
-        })
-      ) {
-        return false;
-      }
-
-      return true;
-    });
-    setFilteredPosts([...filtered]);
-  }, [tides, weather, posts, activity]);
-
-  const handleTideChange = (value) => {
-    setTides(value);
-  };
-
-  const handleWeatherChange = (value) => {
-    setWeather(value);
-  };
-
-  const handleActivityChange = (value, isChecked) => {
-    let newActivity = activity;
-    newActivity.forEach((item) => {
-      if (item.value == value) {
-        item.isChecked = isChecked;
-      }
-    });
-
-    setActivity([...newActivity]);
-  };
+  // const handleWeatherChange = (value) => {
+  //   setWeather(value);
+  // };
 
   return (
     <div className="Home">
       <Header />
 
-      <Filters
-        setTides={handleTideChange}
-        weather={weather}
-        activity={activity}
-        setWeather={handleWeatherChange}
-        setActivity={handleActivityChange}
-      />
+      <Filters weather={weather} />
 
       <Switch>
         <Route path="/" exact={true}>
           <GridLayout>
-            <Map posts={filteredPosts} />
+            <Map posts={posts} />
             <div className="destination-grid">
-              {filteredPosts.map((post) => {
+              {posts.map((post) => {
                 return <DestinationCard post={post} />;
               })}
             </div>
@@ -148,7 +90,7 @@ function Home() {
         </Route>
         <Route path="/:id" exact={true}>
           <GridLayout>
-            <Map posts={filteredPosts} />
+            <Map posts={posts} />
             <Single />
           </GridLayout>
         </Route>

@@ -1,10 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
+
+import {
+  addActivity,
+  removeActivity,
+  addWeather,
+  removeWeather,
+  addTides,
+  removeTides,
+  activityStore,
+  weatherStore,
+  tidesStore,
+} from "../store.js";
 
 const FilterDiv = styled("div")`
   padding: 32px 20px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
   gap: 20px;
   box-shadow: rgba(0, 0, 0, 0.08) 0px 4px 8px;
   z-index: 2;
@@ -43,16 +55,76 @@ const FilterDiv = styled("div")`
   }
 `;
 
-function Filters({ setTides, setWeather, weather, setActivity, activity }) {
+function Filters() {
+  const [activity, setActivity] = useState(activityStore.getState());
+  const [weather, setWeather] = useState(weatherStore.getState());
+  const [tides, setTides] = useState(tidesStore.getState());
+
+  const [activityTypes, setActivityTypes] = useState([]);
+  const [tideOptions, setTideOptions] = useState([]);
+  const [weatherOptions, setWeatherOptions] = useState([]);
+
   const handleTideChange = (e) => {
-    setTides(e.target.value);
+    if (e.target.checked) {
+      tidesStore.dispatch(addTides(e.target.name));
+    } else {
+      tidesStore.dispatch(removeTides(e.target.name));
+    }
+    console.log(e.target);
   };
   const handleWeatherChange = (e) => {
-    setWeather(e.target.value);
+    if (e.target.checked) {
+      weatherStore.dispatch(addWeather(e.target.name));
+    } else {
+      weatherStore.dispatch(removeWeather(e.target.name));
+    }
+    console.log(e.target);
   };
+
   const handleActivityChange = (e) => {
-    setActivity(e.target.name, e.target.checked);
+    if (e.target.checked) {
+      activityStore.dispatch(addActivity(e.target.name));
+    } else {
+      activityStore.dispatch(removeActivity(e.target.name));
+    }
+    console.log(e.target);
   };
+
+  useEffect(() => {
+    const getWPActivityTypes = async () => {
+      const res = await fetch(window.env.APIURL + "/activity");
+      const json = await res.json();
+
+      console.log(json);
+
+      setActivityTypes(json);
+    };
+    getWPActivityTypes();
+
+    const getWPWeatherOptions = async () => {
+      const res = await fetch(window.env.APIURL + "/weather");
+      const json = await res.json();
+
+      console.log(json);
+
+      setWeatherOptions(json);
+    };
+    getWPWeatherOptions();
+
+    const getWPTideOptions = async () => {
+      const res = await fetch(window.env.APIURL + "/tide");
+      const json = await res.json();
+
+      console.log(json);
+
+      setTideOptions(json);
+    };
+    getWPTideOptions();
+
+    activityStore.subscribe(() => setActivity(activityStore.getState()));
+    tidesStore.subscribe(() => setTides(tidesStore.getState()));
+    weatherStore.subscribe(() => setWeather(weatherStore.getState()));
+  }, []);
 
   return (
     <FilterDiv>
@@ -61,34 +133,56 @@ function Filters({ setTides, setWeather, weather, setActivity, activity }) {
         <h5>
           <label htmlFor="tides">Tides:</label>
         </h5>
-        <select name="tides" id="tides" onChange={handleTideChange}>
+        {tideOptions.map((item) => {
+          return (
+            <label>
+              <input
+                id={item.slug}
+                name={item.id}
+                type="checkbox"
+                checked={tides.includes(item.id.toString())}
+                onChange={handleTideChange}
+              />
+              {item.name}
+            </label>
+          );
+        })}
+        {/* <select name="tides" id="tides" onChange={handleTideChange}>
           <option value="any">Any Tides</option>
           <option value="low">Low</option>
           <option value="high">High</option>
-        </select>
-
+        </select> */}
+      </div>
+      <div className="group">
         <h5>
           <label htmlFor="tides">Weather Conditions:</label>
         </h5>
-        <select name="tides" id="tides" onChange={handleWeatherChange}>
-          <option value="any">Any Weather</option>
-          <option value="sunny">Sunny</option>
-          <option value="overcast">Overcast</option>
-          <option value="rain">Rainy</option>
-          <option value="windy">Windy</option>
-        </select>
+        {weatherOptions.map((item) => {
+          return (
+            <label>
+              <input
+                id={item.slug}
+                name={item.id}
+                type="checkbox"
+                checked={weather.includes(item.id.toString())}
+                onChange={handleWeatherChange}
+              />
+              {item.name}
+            </label>
+          );
+        })}
       </div>
 
       <div className="group">
         <h5>Activities:</h5>
-        {activity.map((item) => {
+        {activityTypes.map((item) => {
           return (
-            <label key={item.value}>
+            <label>
               <input
-                id={item.value}
-                name={item.value}
+                id={item.slug}
+                name={item.id}
                 type="checkbox"
-                checked={item.isChecked}
+                checked={activity.includes(item.id.toString())}
                 onChange={handleActivityChange}
               />
               {item.name}
